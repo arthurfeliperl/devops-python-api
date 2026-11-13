@@ -213,7 +213,7 @@ jobs:
 
       - name: Autenticar Docker da EC2 no ECR
         env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_HOST: ${{ vars.EC2_HOST }}
           EC2_USER: ${{ vars.EC2_USER }}
           REGISTRY: ${{ needs.publish-ecr.outputs.registry }}
         run: |

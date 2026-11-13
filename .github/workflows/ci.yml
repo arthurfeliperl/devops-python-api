@@ -183,7 +183,7 @@ jobs:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
 
     runs-on: ubuntu-latest
-    environment: production
+    environment: DES
 
     steps:
       - name: Configurar credenciais AWS

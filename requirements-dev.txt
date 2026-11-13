@@ -1,2 +1,10 @@
 fastapi==0.141.1
 uvicorn[standard]==0.52.1
+
+# Testes e cobertura
+pytest
+pytest-cov
+httpx
+
+# Analise estatica e formatacao
+ruff

@@ -1,20 +1,22 @@
-# Usa uma imagem oficial do Python, versão leve
-FROM python:3.10-slim
+# syntax=docker/dockerfile:1
+FROM python:3.13-slim
 
-# Define o diretório de trabalho dentro do contentor
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
-# Copia o ficheiro de dependências para o contentor
-COPY requirements.txt .
+COPY requirements-dev.txt .
+RUN pip install --no-cache-dir --requirement requirements-dev.txt
 
-# Instala as dependências
-RUN pip install --no-cache-dir -r requirements.txt
+COPY app ./app
 
-# Copia o resto do código da aplicação
-COPY . .
+RUN useradd --create-home --uid 10001 appuser
+USER appuser
 
-# Expõe a porta que a API vai utilizar (geralmente 8000 para FastAPI)
 EXPOSE 8000
 
-# Comando para iniciar a aplicação
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
